@@ -1,7 +1,7 @@
 package org.example.resources.http.controller;
 
 import org.example.resources.infrastructure.db.dao.UsersDao;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +15,7 @@ public class UserController {
         this.usersDao = usersDao;
     }
 
-    @GetMapping("/generate")
+    @PostMapping("/generate")
     public void generate() {
         usersDao.generateUser();
     }

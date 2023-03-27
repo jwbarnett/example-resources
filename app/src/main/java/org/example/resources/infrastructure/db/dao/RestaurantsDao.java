@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
 import static org.example.resources.infrastructure.db.table.restaurants.Tables.RESTAURANT;
 
@@ -25,17 +26,22 @@ public class RestaurantsDao {
             "La Ratatouille");
 
     private final DSLContext context;
+    private final Supplier<UUID> uuidSupplier;
 
-    public RestaurantsDao(DataSource dataSource) {
+    public RestaurantsDao(DataSource dataSource, Supplier<UUID> uuidSupplier) {
         context = DSL.using(dataSource, SQLDialect.POSTGRES);
+        this.uuidSupplier = uuidSupplier;
     }
 
-    public void generateRestaurant() {
+    public RestaurantRecord generateRestaurant() {
         int randomIndex = ThreadLocalRandom.current().nextInt(SAMPLE_NAMES.size() - 1);
+        UUID newId = uuidSupplier.get();
 
         context.insertInto(RESTAURANT)
-                .set(new RestaurantRecord(UUID.randomUUID(), SAMPLE_NAMES.get(randomIndex)))
+                .set(new RestaurantRecord(newId, SAMPLE_NAMES.get(randomIndex)))
                 .execute();
+
+        return get(newId);
     }
 
     public List<RestaurantRecord> getAll() {

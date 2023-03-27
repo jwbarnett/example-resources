@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
+import java.util.UUID;
 
 @Configuration
 public class ResourcesConfiguration {
@@ -17,7 +18,7 @@ public class ResourcesConfiguration {
 
     @Bean
     public RestaurantsDao restaurantsDao(DataSource dataSource) {
-        return new RestaurantsDao(dataSource);
+        return new RestaurantsDao(dataSource, UUID::randomUUID);
     }
 
 }

@@ -4,10 +4,7 @@ import org.example.resources.domain.entity.Restaurant;
 import org.example.resources.domain.entity.type.RestaurantId;
 import org.example.resources.infrastructure.db.dao.RestaurantsDao;
 import org.example.resources.infrastructure.db.table.restaurants.tables.records.RestaurantRecord;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,9 +19,10 @@ public class RestaurantController {
         this.restaurantsDao = restaurantsDao;
     }
 
-    @GetMapping("/generate")
-    public void generate() {
-        restaurantsDao.generateRestaurant();
+    @PostMapping("/generate")
+    public Restaurant generate() {
+        RestaurantRecord record = restaurantsDao.generateRestaurant();
+        return new Restaurant(new RestaurantId(record.getId()), record.getName());
     }
 
     @GetMapping("/")
