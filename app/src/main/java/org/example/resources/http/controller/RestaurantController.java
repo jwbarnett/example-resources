@@ -2,40 +2,37 @@ package org.example.resources.http.controller;
 
 import org.example.resources.domain.entity.Restaurant;
 import org.example.resources.domain.entity.type.RestaurantId;
-import org.example.resources.infrastructure.db.dao.RestaurantsDao;
-import org.example.resources.infrastructure.db.table.restaurants.tables.records.RestaurantRecord;
+import org.example.resources.ports.db.RestaurantsRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("restaurants")
 public class RestaurantController {
 
-    private final RestaurantsDao restaurantsDao;
+    private final RestaurantsRepository restaurantsRepository;
 
-    public RestaurantController(RestaurantsDao restaurantsDao) {
-        this.restaurantsDao = restaurantsDao;
+    public RestaurantController(RestaurantsRepository restaurantsRepository) {
+        this.restaurantsRepository = restaurantsRepository;
     }
 
     @PostMapping("/generate")
     public Restaurant generate() {
-        RestaurantRecord record = restaurantsDao.generateRestaurant();
-        return new Restaurant(new RestaurantId(record.getId()), record.getName());
+        return restaurantsRepository.generateRestaurant();
     }
 
     @GetMapping("/")
     public List<Restaurant> getAll() {
-        return restaurantsDao.getAll().stream()
-                .map(record -> new Restaurant(new RestaurantId(record.getId()), record.getName()))
+        return restaurantsRepository.getAll().stream()
                 .toList();
     }
 
     @GetMapping("/{id}")
-    public Restaurant get(@PathVariable UUID id) {
-        RestaurantRecord record = restaurantsDao.get(id);
-        return new Restaurant(new RestaurantId(record.getId()), record.getName());
+    public Optional<Restaurant> get(@PathVariable UUID id) {
+        return restaurantsRepository.get(new RestaurantId(id));
     }
 
 }

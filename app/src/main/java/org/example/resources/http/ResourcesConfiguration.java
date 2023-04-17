@@ -1,7 +1,9 @@
 package org.example.resources.http;
 
-import org.example.resources.infrastructure.db.dao.RestaurantsDao;
-import org.example.resources.infrastructure.db.dao.UsersDao;
+import org.example.resources.adapters.db.RestaurantsRepositoryImpl;
+import org.example.resources.adapters.db.UsersRepositoryImpl;
+import org.example.resources.ports.db.RestaurantsRepository;
+import org.example.resources.ports.db.UsersRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,13 +14,13 @@ import java.util.UUID;
 public class ResourcesConfiguration {
 
     @Bean
-    public UsersDao usersDao(DataSource dataSource) {
-        return new UsersDao(dataSource);
+    public UsersRepository usersRepository(DataSource dataSource) {
+        return new UsersRepositoryImpl(dataSource, UUID::randomUUID);
     }
 
     @Bean
-    public RestaurantsDao restaurantsDao(DataSource dataSource) {
-        return new RestaurantsDao(dataSource, UUID::randomUUID);
+    public RestaurantsRepository restaurantsRepository(DataSource dataSource) {
+        return new RestaurantsRepositoryImpl(dataSource, UUID::randomUUID);
     }
 
 }

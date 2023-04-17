@@ -1,6 +1,7 @@
 package org.example.resources.http.controller;
 
-import org.example.resources.infrastructure.db.dao.UsersDao;
+import org.example.resources.domain.entity.User;
+import org.example.resources.ports.db.UsersRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,15 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("users")
 public class UserController {
 
-    private final UsersDao usersDao;
+    private final UsersRepository usersRepository;
 
-    public UserController(UsersDao usersDao) {
-        this.usersDao = usersDao;
+    public UserController(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
     }
 
     @PostMapping("/generate")
-    public void generate() {
-        usersDao.generateUser();
+    public User generate() {
+        return usersRepository.generateUser();
     }
 
 }
